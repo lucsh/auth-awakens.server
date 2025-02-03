@@ -27,7 +27,6 @@ This project is a **multi-tenant REST API** built with **Node.js (Express.js)**,
 ### API Documentation
 
 - **Swagger UI** is available at: `http://localhost:3000/api-docs`
-- Automatically documents all routes defined in `routes/*.js`.
 - Provides a user-friendly UI for testing API endpoints.
 
 ## Tech Stack
@@ -61,9 +60,16 @@ yarn install
 
 ### Environment Variables
 
+Generate a JWT secret with: 
+
+```sh
+openssl rand -base64 64
+```
+
 Create a `.env` file with:
 
 ```env
+APP_NAME="Auth Awakens API"
 PORT=3000
 DATABASE_URL=postgres://user:password@localhost:5432/mydatabase
 REDIS_URL=redis://localhost:6379
