@@ -1,0 +1,118 @@
+openapi: 3.0.3
+info:
+  title: User Management API
+  version: 1.0.0
+  description: API to manage users and organizations
+
+paths:
+  /:
+    post:
+      summary: Create a new user
+      description: Endpoint to create a new user. Requires authentication and role-based authorization.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - role
+              properties:
+                name:
+                  type: string
+                  description: Full name of the user
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the user
+                  example: johndoe@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Password of the user
+                  example: mySecureP@ssword
+                role:
+                  type: string
+                  description: Role of the user (e.g., ADMIN, SUPERADMIN)
+                  example: ADMIN
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User created successfully
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        example: johndoe@example.com
+                      organization_id:
+                        type: integer
+                        example: 10
+                      role:
+                        type: string
+                        example: ADMIN
+        '400':
+          description: Bad request - Missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Missing required fields
+        '403':
+          description: Forbidden - User not authorized to perform this action
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Only SUPERADMIN or ADMIN can create users.
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: An unexpected error occurred
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Roles:
+      type: string
+      enum:
+        - SUPERADMIN
+        - ADMIN
+        - USER

@@ -1,0 +1,168 @@
+openapi: 3.0.0
+info:
+  title: Authentication API
+  description: API endpoints for authentication and password management.
+  version: 1.0.0
+
+paths:
+  /login:
+    post:
+      summary: User Login
+      description: Authenticates a user using email and password, and returns a JWT token.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: securePassword123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      email:
+                        type: string
+                        example: user@example.com
+                      role:
+                        type: string
+                        example: Admin
+        '401':
+          description: Invalid email or password
+        '500':
+          description: Server error
+
+  /reset-password:
+    post:
+      summary: Request Password Reset
+      description: Sends a password reset link to the user's registered email.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: user@example.com
+      responses:
+        '200':
+          description: Password reset link sent successfully
+        '404':
+          description: User not found
+        '500':
+          description: Unable to process the request
+
+  /set-password:
+    post:
+      summary: Set New Password
+      description: Completes the password reset process by verifying the token and updating the password.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resetToken:
+                  type: string
+                  example: '1234567890abcdef'
+                newPassword:
+                  type: string
+                  format: password
+                  example: newSecurePassword123
+      responses:
+        '200':
+          description: Password reset successful
+        '400':
+          description: Invalid or expired reset token
+        '500':
+          description: Unable to reset the password
+
+  /logout:
+    post:
+      summary: Logout User
+      description: Logs out the user by clearing the authentication cookie.
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Logout successful
+        '500':
+          description: Server error while logging out
+
+  /google:
+    get:
+      summary: Google SSO Login
+      description: Redirects the user to Google's OAuth2 login page.
+      tags:
+        - Auth
+      responses:
+        '302':
+          description: Redirect to Google login
+        '500':
+          description: Unable to initiate Google login
+
+  /google/callback:
+    get:
+      summary: Google SSO Callback
+      description: Callback URL for handling the result of Google's OAuth2 authentication.
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successful
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 10
+                      name:
+                        type: string
+                        example: John Doe
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      organizationId:
+                        type: integer
+                        example: 1
+                      role:
+                        type: string
+                        example: User
+        '500':
+          description: Unable to handle Google login
