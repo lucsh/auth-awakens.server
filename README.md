@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a **multi-tenant REST API** built with **Node.js (Express.js)**, using **PostgreSQL (via Slonik)**, **Redis**, and **JWT-based authentication**. It supports **user authentication, password resets via email, Google SSO for organizations, and organization-based access control**.
+This project is a **multi-tenant REST API** built with **Node.js (Express.js)**, using **PostgreSQL (via knex)**, **Redis**, and **JWT-based authentication**. It supports **user authentication, password resets via email, Google SSO for organizations, and organization-based access control**.
 
 ## Features
 
